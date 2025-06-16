@@ -22,7 +22,7 @@ def mask_account_card(account_info: str) -> str:
         return account_info
 
     account_type = account_info[:last_space_index]
-    number = account_info[last_space_index + 1 :]
+    number = account_info[last_space_index + 1:]
 
     if account_type.lower() == "счет":
         masked_number = get_mask_account(number)
@@ -66,5 +66,3 @@ if __name__ == "__main__":
 
     # Тестирование get_date
     print(get_date("2024-03-11T02:26:18.671407"))
-
-
