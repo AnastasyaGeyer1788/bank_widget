@@ -53,6 +53,6 @@ if __name__ == "__main__":
 
 filtered_ops = filter_by_state(operations, 'EXECUTED')
 sorted_ops = sort_by_date(filtered_ops)
-=======
+
 
 
