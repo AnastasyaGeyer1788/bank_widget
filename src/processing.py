@@ -1,3 +1,4 @@
+feature/homework_10_2
 from typing import Dict, List
 from datetime import datetime
 
@@ -71,3 +72,4 @@ if __name__ == "__main__":
     print("\nВыполненные операции, отсортированные по дате:")
     for op in sorted_ops:
         print(f"{op['date']} - {op['id']}")
+
