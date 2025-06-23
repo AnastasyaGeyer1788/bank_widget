@@ -1,7 +1,7 @@
 import pytest
 from datetime import datetime
 from typing import Dict, List
-from src.processing import filter_by_state, sort_by_date  # Импорт из вашего модуля
+from src.processing import filter_by_state, sort_by_date
 
 # Фикстуры с тестовыми данными
 @pytest.fixture
