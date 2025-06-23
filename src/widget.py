@@ -7,30 +7,35 @@ from src.masks import (
 def mask_account_card(account_info: str) -> str:
     """
     Маскирует номер карты или счета в строке формата "Тип Номер".
-    Обрабатывает строку целиком, не разделяя на отдельные аргументы.
+    Возвращает строку без изменений, если не удалось определить тип и номер.
 
     Args:
         account_info: строка формата "Visa Platinum 7000792289606361" или
                      "Счет 73654108430135874305"
 
     Returns:
-        Строку с замаскированным номером в формате "Тип XXXX XX** **** XXXX" или
-        "Тип **XXXX"
+        Строку с замаскированным номером или исходную строку, если формат неверный
     """
-    last_space_index = account_info.rfind(" ")
-    if last_space_index == -1:
+    if not account_info:
         return account_info
 
-    account_type = account_info[:last_space_index]
-    number = account_info[last_space_index + 1:]
+    parts = account_info.rsplit(" ", 1)
+    if len(parts) < 2:
+        return account_info
+
+    account_type, number = parts
+
+    if not number.isdigit():
+        return account_info
 
     if account_type.lower() == "счет":
         masked_number = get_mask_account(number)
     else:
+        if len(number) < 16:
+            return account_info
         masked_number = get_mask_card_number(number)
 
     return f"{account_type} {masked_number}"
-
 
 def get_date(date_str: str) -> str:
     """
