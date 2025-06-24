@@ -52,22 +52,4 @@ def get_date(date_str: str) -> str:
     return f"{day}.{month}.{year}"
 
 
-if __name__ == "__main__":
-    # Тестирование mask_account_card
-    test_cases = [
-        "Visa Platinum 7000792289606361",
-        "Maestro 1234567890123456",
-        "Счет 73654108430135874305",
-        "МИР 9876543210987654",
-        "Счет 1234567890",
-        "КартаБезПробелов1234567890",
-        "Счет 123",
-    ]
 
-    for case in test_cases:
-        print(f"Вход: {case}")
-        print(f"Выход: {mask_account_card(case)}")
-        print("-" * 50)
-
-    # Тестирование get_date
-    print(get_date("2024-03-11T02:26:18.671407"))
