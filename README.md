@@ -67,9 +67,75 @@ pytest tests/
 2. [ ] Граничные случаи
 3. [ ] Некорректные входные данные
 
+#### Фильтрация транзакций (filter_by_currency)
+Фильтрует транзакции по коду валюты
+```
+from generators import filter_by_currency
+
+transactions = [
+    {
+        "id": 939719570,
+        "operationAmount": {
+            "currency": {"code": "USD"}
+        }
+    },
+    {
+        "id": 142264268,
+        "operationAmount": {
+            "currency": {"code": "EUR"}
+        }
+    }
+]
+
+usd_transactions = filter_by_currency(transactions, "USD")
+print(list(usd_transactions))
+# Вывод: [{'id': 939719570, 'operationAmount': {'currency': {'code': 'USD'}}}]
+```
+
+#### Работа с описаниями транзакций (transaction_descriptions)
+Извлекает описания транзакций
+```
+from generators import transaction_descriptions
+
+transactions = [
+    {"description": "Перевод организации"},
+    {"description": "Перевод со счета на счет"}
+]
+
+for desc in transaction_descriptions(transactions):
+    print(desc)
+# Вывод:
+# Перевод организации
+# Перевод со счета на счет
+```
+
+#### Генератор номеров карт (card_number_generator)
+Генерирует номера банковских карт в заданном диапазоне
+```
+from generators import card_number_generator
+
+# Генерация 5 номеров карт
+for card_number in card_number_generator(1, 5):
+    print(card_number)
+# Вывод:
+# 0000 0000 0000 0001
+# 0000 0000 0000 0002
+# ...
+# 0000 0000 0000 0005
+
+# Генерация специфического номера
+card = next(card_number_generator(1234567812345678, 1234567812345678))
+print(card)  # 1234 5678 1234 5678
+```
+
+
 ### Покрытие кода
 ```bash
 pytest --cov=src --cov-report=term
+```
+###  HTML-отчет
+```bash
+pytest --cov=src --cov-report=html:coverage_html_report --cov-report=term-missing:skip-covered tests/
 ```
 
 ## 📜Лицензия:
