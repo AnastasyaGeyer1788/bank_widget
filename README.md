@@ -128,6 +128,65 @@ card = next(card_number_generator(1234567812345678, 1234567812345678))
 print(card)  # 1234 5678 1234 5678
 ```
 
+## Новый функционал: Декоратор логирования `@log`
+
+Реализован декоратор `@log` для логирования вызовов функций в файл или консоль.
+
+### Возможности:
+- Логирование успешных вызовов функций
+- Логирование ошибок с указанием типа исключения
+- Запись входных параметров (args и kwargs)
+- Гибкий вывод: в файл или консоль
+- Поддержка временных меток вызовов
+
+### Использование
+
+```python
+from src.decorators import log
+
+
+# Логирование в файл
+@log(filename="operations.log")
+def transfer(amount, from_acc, to_acc):
+    """Перевод средств между счетами"""
+    # реализация перевода
+    return True
+
+
+# Логирование в консоль
+@log()
+def check_balance(account, balance=None):
+    """Проверка баланса"""
+    # реализация проверки
+    return balance
+```
+
+### Формат логов
+
+Успешное выполнение:
+```
+[timestamp] function_name ok
+Args: (arg1, arg2), Kwargs: {'param': value}
+```
+
+Ошибка:
+```
+[timestamp] function_name error: ErrorType
+Args: (arg1, arg2), Kwargs: {'param': value}
+```
+
+### Требования
+- Python 3.7+
+- Зависимости: `pytest`, `pytest-cov`
+
+### Пример вывода
+```log
+2023-05-15 14:30:45 transfer ok
+Args: (100, 'acc1', 'acc2'), Kwargs: {}
+
+2023-05-15 14:31:22 check_balance error: ValueError
+Args: ('invalid_acc',), Kwargs: {}
+```
 
 ### Покрытие кода
 ```bash

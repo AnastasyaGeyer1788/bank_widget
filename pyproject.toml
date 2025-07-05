@@ -5,11 +5,14 @@ description = ""
 authors = [{name = "Your Name",email = "you@example.com"}]
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = ["generators (>=2020.4.27,<2021.0.0)"]
 
 [tool.poetry]
 packages = [{include = "package_name", from = "src"}]
 
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.1"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -37,3 +40,11 @@ ensure_newline_before_comments = true
 disallow_untyped_defs = true
 warn_return_any = true
 exclude = 'venv/'
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-v"
+
+
+
