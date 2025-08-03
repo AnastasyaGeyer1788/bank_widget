@@ -197,3 +197,4 @@ cython_debug/
 # Игнорировать папку с отчётом
 #htmlcov/
 #*.html
+#ggAPI_test.py

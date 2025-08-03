@@ -1,5 +1,7 @@
-import pytest
 from datetime import datetime
+
+import pytest
+
 from src.decorators import log
 
 
@@ -61,6 +63,7 @@ def test_log_to_console(capsys):
         - Вывод информации о вызове функции
         - Вывод информации об ошибках
     """
+
     @log()
     def multiply(a, b):
         """Тестовая функция для умножения двух чисел."""
@@ -95,6 +98,7 @@ def test_decorator_preserves_functionality():
         - Функция возвращает корректный результат
         - Декоратор не модифицирует поведение функции
     """
+
     @log()
     def subtract(a, b):
         """Тестовая функция для вычитания двух чисел."""

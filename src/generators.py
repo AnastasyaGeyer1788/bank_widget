@@ -1,9 +1,7 @@
-from typing import Iterator, Dict, Any
+from typing import Any, Dict, Iterator
 
 
-def filter_by_currency(
-    transactions: Iterator[Dict[str, Any]], currency_code: str
-) -> Iterator[Dict[str, Any]]:
+def filter_by_currency(transactions: Iterator[Dict[str, Any]], currency_code: str) -> Iterator[Dict[str, Any]]:
     """
     Фильтрует транзакции по коду валюты.
 
@@ -27,9 +25,7 @@ def transaction_descriptions(transactions: Iterator[Dict[str, Any]]) -> Iterator
     :yield: описание транзакции (строка)
     """
     for transaction in transactions:
-        yield transaction.get(
-            "description", ""
-        )  # Возвращаем пустую строку, если описания нет
+        yield transaction.get("description", "")  # Возвращаем пустую строку, если описания нет
 
 
 def card_number_generator(start: int, stop: int) -> Iterator[str]:
@@ -49,4 +45,3 @@ def card_number_generator(start: int, stop: int) -> Iterator[str]:
     for number in range(start, stop + 1):
         card_num = f"{number:016d}"
         yield f"{card_num[:4]} {card_num[4:8]} {card_num[8:12]} {card_num[12:16]}"
-

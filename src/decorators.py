@@ -1,15 +1,13 @@
 import functools
 from datetime import datetime
 
+
 def log(filename=None):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             # Добавляем запись аргументов в лог
-            log_entry = (
-                f"{func.__name__} called at {datetime.now()}\n"
-                f"Args: {args}, Kwargs: {kwargs}\n"
-            )
+            log_entry = f"{func.__name__} called at {datetime.now()}\n" f"Args: {args}, Kwargs: {kwargs}\n"
 
             try:
                 result = func(*args, **kwargs)
@@ -28,5 +26,7 @@ def log(filename=None):
                 else:
                     print(log_entry + error_msg, end="")
                 raise
+
         return wrapper
+
     return decorator

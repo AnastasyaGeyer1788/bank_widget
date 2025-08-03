@@ -37,6 +37,7 @@ def mask_account_card(account_info: str) -> str:
 
     return f"{account_type} {masked_number}"
 
+
 def get_date(date_str: str) -> str:
     """
     Преобразует дату из формата ISO в формат ДД.ММ.ГГГГ.
@@ -50,6 +51,3 @@ def get_date(date_str: str) -> str:
     date_part = date_str.split("T")[0]
     year, month, day = date_part.split("-")
     return f"{day}.{month}.{year}"
-
-
-
