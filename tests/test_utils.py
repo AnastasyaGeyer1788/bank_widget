@@ -1,69 +1,78 @@
 import json
-from unittest.mock import mock_open, patch
-
 import pytest
-
+from unittest.mock import mock_open, patch
 from src.utils import load_transactions_from_json
 
 
-def test_load_transactions_from_json_valid_file():
-    """Тест загрузки корректного JSON-файла со списком транзакций."""
-    test_data = [{"id": 1, "amount": 100, "currency": "RUB"}, {"id": 2, "amount": 50, "currency": "USD"}]
+# Фикстурные данные
+@pytest.fixture
+def valid_transactions():
+    return [{"id": 1, "amount": 100, "currency": "RUB"},
+            {"id": 2, "amount": 50, "currency": "USD"}]
 
-    mock_file = mock_open(read_data=json.dumps(test_data))
+
+def test_load_valid_json_file(valid_transactions):
+    """Тест загрузки корректного JSON-файла со списком транзакций"""
+    mock_file = mock_open(read_data=json.dumps(valid_transactions))
     with patch("builtins.open", mock_file), patch("os.path.exists", return_value=True):
-        result = load_transactions_from_json("dummy_path.json")
+        result = load_transactions_from_json("test.json")
+    assert result == valid_transactions
 
-    assert result == test_data
 
-
-def test_load_transactions_from_json_empty_list():
-    """Тест загрузки файла с пустым списком."""
+def test_load_empty_list():
+    """Тест загрузки файла с пустым списком"""
     mock_file = mock_open(read_data=json.dumps([]))
     with patch("builtins.open", mock_file), patch("os.path.exists", return_value=True):
-        result = load_transactions_from_json("dummy_path.json")
-
+        result = load_transactions_from_json("test.json")
     assert result == []
 
 
-def test_load_transactions_from_json_invalid_content():
-    """Тест загрузки файла с не-списком (должен вернуть пустой список)."""
-    mock_file = mock_open(read_data=json.dumps({"not": "a list"}))
+def test_load_non_list_content():
+    """Тест загрузки файла с не-списком"""
+    mock_file = mock_open(read_data=json.dumps({"key": "value"}))
     with patch("builtins.open", mock_file), patch("os.path.exists", return_value=True):
-        result = load_transactions_from_json("dummy_path.json")
-
+        result = load_transactions_from_json("test.json")
     assert result == []
 
 
-def test_load_transactions_from_json_nonexistent_file():
-    """Тест обработки несуществующего файла."""
+def test_file_not_found():
+    """Тест обработки несуществующего файла"""
     with patch("os.path.exists", return_value=False):
-        result = load_transactions_from_json("non_existent_file.json")
+        result = load_transactions_from_json("missing.json")
     assert result == []
 
 
-def test_load_transactions_from_json_invalid_json():
-    """Тест обработки битого JSON-файла."""
-    mock_file = mock_open(read_data="{invalid json}")
-    mock_file.side_effect = json.JSONDecodeError("Expecting value", "", 0)
-    with patch("builtins.open", mock_file), patch("os.path.exists", return_value=True):
-        result = load_transactions_from_json("dummy_path.json")
-
+def test_invalid_json_format():
+    """Тест обработки битого JSON"""
+    m = mock_open(read_data="{invalid}")
+    m.side_effect = json.JSONDecodeError("Error", "doc", 1)
+    with patch("builtins.open", m), patch("os.path.exists", return_value=True):
+        result = load_transactions_from_json("broken.json")
     assert result == []
 
 
-def test_load_transactions_from_json_permission_error():
-    """Тест обработки ошибки доступа к файлу."""
-    with patch("builtins.open", side_effect=PermissionError("No access")), patch("os.path.exists", return_value=True):
-        result = load_transactions_from_json("restricted_file.json")
+def test_permission_denied():
+    """Тест обработки ошибки доступа"""
+    with patch("builtins.open", side_effect=PermissionError), \
+            patch("os.path.exists", return_value=True):
+        result = load_transactions_from_json("restricted.json")
     assert result == []
 
 
-def test_load_transactions_from_json_empty_file():
-    """Тест обработки пустого файла."""
-    mock_file = mock_open(read_data="")
-    mock_file.side_effect = json.JSONDecodeError("Expecting value", "", 0)
-    with patch("builtins.open", mock_file), patch("os.path.exists", return_value=True):
-        result = load_transactions_from_json("dummy_path.json")
-
+def test_empty_file():
+    """Тест обработки полностью пустого файла"""
+    m = mock_open(read_data="")
+    m.side_effect = json.JSONDecodeError("Error", "doc", 1)
+    with patch("builtins.open", m), patch("os.path.exists", return_value=True):
+        result = load_transactions_from_json("empty.json")
     assert result == []
+
+
+def test_real_file_loading():
+    """Интеграционный тест с реальным файлом (опциональный)"""
+    try:
+        result = load_transactions_from_json("data/operations.json")
+        assert isinstance(result, list)
+        print(f"\nЗагружено транзакций: {len(result)}")
+    except FileNotFoundError:
+        pytest.skip("Тестовый файл не найден")
