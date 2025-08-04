@@ -1,5 +1,7 @@
 import pytest
-from src.widget import mask_account_card, get_date
+
+from src.widget import get_date, mask_account_card
+
 
 # Фикстуры для функции mask_account_card
 @pytest.fixture
@@ -82,4 +84,3 @@ def test_get_date_with_timezone():
     # Проверяем, что время и таймзона игнорируются
     assert get_date("2024-03-11T02:26:18+03:00") == "11.03.2024"
     assert get_date("2024-03-11T02:26:18Z") == "11.03.2024"
-

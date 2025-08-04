@@ -1,11 +1,8 @@
-from typing import Dict, List
 from datetime import datetime
+from typing import Dict, List
 
 
-def filter_by_state(
-    operations: List[Dict[str, str]],
-    state: str = "EXECUTED"
-) -> List[Dict[str, str]]:
+def filter_by_state(operations: List[Dict[str, str]], state: str = "EXECUTED") -> List[Dict[str, str]]:
     """Фильтрует список операций по указанному статусу.
 
     Args:
@@ -18,10 +15,7 @@ def filter_by_state(
     return [operation for operation in operations if operation.get("state") == state]
 
 
-def sort_by_date(
-    operations: List[Dict[str, str]],
-    reverse: bool = True
-) -> List[Dict[str, str]]:
+def sort_by_date(operations: List[Dict[str, str]], reverse: bool = True) -> List[Dict[str, str]]:
     """Сортирует операции по дате.
 
     Args:
@@ -32,11 +26,4 @@ def sort_by_date(
     Returns:
         Отсортированный список операций.
     """
-    return sorted(
-        operations,
-        key=lambda x: datetime.fromisoformat(x["date"]),
-        reverse=reverse
-    )
-
-
-
+    return sorted(operations, key=lambda x: datetime.fromisoformat(x["date"]), reverse=reverse)

@@ -1,5 +1,7 @@
 import pytest
-from src.masks import get_mask_card_number, get_mask_account
+
+from src.masks import get_mask_account, get_mask_card_number
+
 
 # Фикстуры для тестирования функции get_mask_card_number
 @pytest.fixture
@@ -71,4 +73,3 @@ def test_get_mask_account_non_numeric(non_numeric_account_number):
 # Дополнительные тесты для граничных случаев
 def test_get_mask_account_empty_string():
     assert get_mask_account("") == "**"
-

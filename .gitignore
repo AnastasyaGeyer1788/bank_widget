@@ -37,7 +37,7 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # Unit test / coverage reports
-# htmlcov/
+htmlcov/
 .tox/
 .nox/
 .coverage
@@ -195,5 +195,6 @@ cython_debug/
 .cursorindexingignore
 
 # Игнорировать папку с отчётом
-htmlcov/
-*.html
+#htmlcov/
+#*.html
+#ggAPI_test.py
