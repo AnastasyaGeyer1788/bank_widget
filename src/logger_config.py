@@ -22,17 +22,10 @@ def setup_logger(name: str, log_file: str, level: int = logging.DEBUG) -> loggin
     logger.setLevel(level)
 
     # Форматер
-    formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S'
-    )
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
 
     # Обработчик файла (перезаписывает файл при каждом запуске)
-    file_handler = logging.FileHandler(
-        filename=logs_dir / log_file,
-        mode='w',
-        encoding='utf-8'
-    )
+    file_handler = logging.FileHandler(filename=logs_dir / log_file, mode="w", encoding="utf-8")
     file_handler.setFormatter(formatter)
     file_handler.setLevel(level)
 

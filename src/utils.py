@@ -4,7 +4,7 @@ from typing import Dict, List, Union
 
 from logger_config import setup_logger
 
-logger = setup_logger('utils', 'utils.log')
+logger = setup_logger("utils", "utils.log")
 
 
 def load_transactions_from_json(file_path: str) -> List[Dict[str, Union[str, int, float]]]:

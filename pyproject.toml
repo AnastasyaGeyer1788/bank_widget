@@ -5,7 +5,13 @@ description = ""
 authors = [{name = "Your Name",email = "you@example.com"}]
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = ["generators (>=2020.4.27,<2021.0.0)"]
+dependencies = [
+    "generators (>=2020.4.27,<2021.0.0)",
+    "pandas>=2.0.0",
+    "openpyxl>=3.1.0",
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0"
+]
 
 [tool.poetry]
 packages = [{include = "package_name", from = "src"}]
@@ -45,6 +51,5 @@ exclude = 'venv/'
 pythonpath = ["src"]
 testpaths = ["tests"]
 addopts = "-v"
-
 
 
