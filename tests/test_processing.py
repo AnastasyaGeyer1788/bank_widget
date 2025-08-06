@@ -1,7 +1,9 @@
-import pytest
-from datetime import datetime
 from typing import Dict, List
+
+import pytest
+
 from src.processing import filter_by_state, sort_by_date
+
 
 # Фикстуры с тестовыми данными
 @pytest.fixture
@@ -136,4 +138,3 @@ def test_sort_by_date_single_operation():
 
 def test_filter_by_state_nonexistent_state(sample_operations):
     assert filter_by_state(sample_operations, "NONEXISTENT") == []
-
