@@ -1,4 +1,5 @@
 import os
+
 import requests
 from dotenv import load_dotenv
 
@@ -10,4 +11,5 @@ headers = {"apikey": api_key}
 
 response = requests.get(url, headers=headers)
 print(response.json())  # возвращает курс USD → RUB
+
 print(os.getenv("EXCHANGE_RATE_API_KEY"))  # выведет мой ключ

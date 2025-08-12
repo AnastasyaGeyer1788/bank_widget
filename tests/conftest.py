@@ -1,5 +1,5 @@
-import pytest
 import pandas as pd
+import pytest
 
 
 @pytest.fixture
@@ -11,8 +11,4 @@ def mock_csv_data():
 @pytest.fixture
 def mock_excel_data():
     """Фикстура с тестовыми данными для Excel."""
-    return pd.DataFrame({
-        'date': ['2023-01-02'],
-        'amount': [200],
-        'description': ['Deposit']
-    })
+    return pd.DataFrame({"date": ["2023-01-02"], "amount": [200], "description": ["Deposit"]})

@@ -1,8 +1,6 @@
 import json
 from unittest.mock import mock_open, patch
 
-import pytest
-
 from src.utils import load_transactions_from_json
 
 

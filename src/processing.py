@@ -2,17 +2,24 @@ from datetime import datetime
 from typing import Dict, List
 
 
-def filter_by_state(operations: List[Dict[str, str]], state: str = "EXECUTED") -> List[Dict[str, str]]:
-    """Фильтрует список операций по указанному статусу.
+def filter_by_state(operations: List[Dict], state: str = "EXECUTED") -> List[Dict]:
+    """Фильтрация по статусу с улучшенной обработкой данных"""
+    if not operations:
+        return []
 
-    Args:
-        operations: Список словарей с банковскими операциями.
-        state: Статус для фильтрации (по умолчанию "EXECUTED").
+    state = str(state).strip().upper()
+    filtered_ops = []
 
-    Returns:
-        Отфильтрованный список операций с указанным статусом.
-    """
-    return [operation for operation in operations if operation.get("state") == state]
+    for op in operations:
+        # Проверяем наличие и корректность поля state
+        op_state = op.get("state")
+        if not op_state or not isinstance(op_state, str):
+            continue
+
+        if op_state.strip().upper() == state:
+            filtered_ops.append(op)
+
+    return filtered_ops
 
 
 def sort_by_date(operations: List[Dict[str, str]], reverse: bool = True) -> List[Dict[str, str]]:

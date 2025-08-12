@@ -1,30 +1,28 @@
-import functools
-from datetime import datetime
+import logging
+from functools import wraps
+from typing import Any, Callable
 
 
-def log(filename=None):
-    def decorator(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            # Добавляем запись аргументов в лог
-            log_entry = f"{func.__name__} called at {datetime.now()}\n" f"Args: {args}, Kwargs: {kwargs}\n"
+def log(logger: logging.Logger = None):
+    """Декоратор для логирования вызовов функций.
+
+    Args:
+        logger: Объект логгера. Если None, будет создан новый.
+    """
+
+    def decorator(func: Callable) -> Callable:
+        @wraps(func)
+        def wrapper(*args, **kwargs) -> Any:
+            # Используем переданный логгер или создаем новый
+            func_logger = logger or logging.getLogger(func.__module__)
 
             try:
+                func_logger.info(f"Вызов функции {func.__name__}")
                 result = func(*args, **kwargs)
-                success_msg = f"{func.__name__} ok\n"
-                if filename:
-                    with open(filename, "a") as f:
-                        f.write(log_entry + success_msg)
-                else:
-                    print(log_entry + success_msg, end="")
+                func_logger.info(f"Функция {func.__name__} выполнена успешно")
                 return result
             except Exception as e:
-                error_msg = f"{func.__name__} error: {type(e).__name__}\n"
-                if filename:
-                    with open(filename, "a") as f:
-                        f.write(log_entry + error_msg)
-                else:
-                    print(log_entry + error_msg, end="")
+                func_logger.error(f"Ошибка в функции {func.__name__}: {str(e)}", exc_info=True)
                 raise
 
         return wrapper

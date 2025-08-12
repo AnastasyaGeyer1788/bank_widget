@@ -1,46 +1,54 @@
-[project]
-name = "package-name"
-version = "0.1.0"
-description = ""
-authors = [{name = "Your Name",email = "you@example.com"}]
-readme = "README.md"
-requires-python = ">=3.13"
-dependencies = [
-    "generators (>=2020.4.27,<2021.0.0)",
-    "pandas>=2.0.0",
-    "openpyxl>=3.1.0",
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0"
-]
-
 [tool.poetry]
-packages = [{include = "package_name", from = "src"}]
+name = "bank_widget"
+version = "0.1.0"
+description = "Bank transactions processing widget"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "src"}]
 
+[tool.poetry.dependencies]
+python = "^3.13"
+openpyxl = ">=3.1.0"
+pandas = ">=2.0.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.4.1"
+pytest = ">=8.4.1"
+pytest-cov = ">=4.0.0"
+black = ">=24.4.2"
+isort = ">=5.13.2"
+mypy = ">=1.9.0"
+
+
+[tool.poetry.group.lint.dependencies]
+flake8 = "^7.3.0"
+black = "^25.1.0"
+isort = "^6.0.1"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core>=2.0.0"]
 build-backend = "poetry.core.masonry.api"
-
 
 [tool.black]
 line-length = 119
 exclude = '''
-\.git
+/(\.git|venv)/
 '''
 
 [tool.isort]
 profile = "black"
 line_length = 119
-multi_line_output = 5  # Вертикальный формат с 1 импортом на строку
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
+skip = [
+    "myenv",
+    ".venv",
+    "venv",
+    "**/site-packages/**",
+    "**/__pycache__/**",
+    "**/.git/**"
+]
 known_first_party = ["src"]
 combine_as_imports = true
-ensure_newline_before_comments = true
+combine_as = true  # Объединяет импорты из одного модуля
+force_single_line = true
 
 [tool.mypy]
 disallow_untyped_defs = true
@@ -50,6 +58,4 @@ exclude = 'venv/'
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
-addopts = "-v"
-
-
+addopts = "-v --cov=src --cov-report=term-missing"

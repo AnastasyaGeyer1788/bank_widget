@@ -2,7 +2,7 @@ import json
 import os
 from typing import Dict, List, Union
 
-from logger_config import setup_logger
+from src.logger_config import setup_logger
 
 logger = setup_logger("utils", "utils.log")
 

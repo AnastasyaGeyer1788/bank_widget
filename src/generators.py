@@ -25,7 +25,7 @@ def transaction_descriptions(transactions: Iterator[Dict[str, Any]]) -> Iterator
     :yield: описание транзакции (строка)
     """
     for transaction in transactions:
-        yield transaction.get("description", "")  # Возвращаем пустую строку, если описания нет
+        yield transaction.get("description", "")
 
 
 def card_number_generator(start: int, stop: int) -> Iterator[str]:

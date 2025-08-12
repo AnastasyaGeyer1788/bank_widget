@@ -1,136 +1,100 @@
-from datetime import datetime
+import logging
+from io import StringIO
 
 import pytest
 
 from src.decorators import log
 
 
-def test_log_to_file(tmp_path):
-    """Тестирует логирование в файл при успешном выполнении и ошибке.
+@pytest.fixture
+def setup_logger():
+    """Фикстура для настройки логгера с выводом в StringIO"""
+    log_stream = StringIO()
+    logger = logging.getLogger("test_logger")
+    logger.setLevel(logging.INFO)
 
-    Args:
-        tmp_path: Фикстура pytest для создания временных файлов.
+    handler = logging.StreamHandler(log_stream)
+    handler.setFormatter(logging.Formatter("%(levelname)s:%(message)s"))
+    logger.addHandler(handler)
 
-    Проверяет:
-        - Запись в файл при успешном выполнении функции
-        - Запись в файл при возникновении ошибки
-        - Корректность формата логов (время, аргументы, результат)
-    """
-    filename = tmp_path / "test_log.txt"
+    return logger, log_stream
 
-    @log(filename=str(filename))
+
+def test_log_successful_execution(setup_logger):
+    """Тест логирования успешного выполнения функции"""
+    logger, log_stream = setup_logger
+
+    @log(logger=logger)
     def add(a, b):
-        """Тестовая функция для сложения двух чисел."""
         return a + b
 
-    # 1. Проверяем успешное выполнение
-    add(2, 3)
+    result = add(2, 3)
+    assert result == 5
 
-    with open(filename, "r") as f:
-        log_content = f.read()
+    log_content = log_stream.getvalue()
+    assert "INFO:Вызов функции add" in log_content
+    assert "INFO:Функция add выполнена успешно" in log_content
 
-    assert "add" in log_content
-    assert "ok" in log_content
-    assert "Args: (2, 3)" in log_content
-    assert "Kwargs: {}" in log_content
-    assert datetime.now().strftime("%Y-%m-%d") in log_content
 
-    # 2. Проверяем логирование ошибки
-    @log(filename=str(filename))
+def test_log_failed_execution(setup_logger):
+    """Тест логирования ошибки в функции"""
+    logger, log_stream = setup_logger
+
+    @log(logger=logger)
     def divide(a, b):
-        """Тестовая функция для деления с возможной ошибкой."""
         return a / b
 
     with pytest.raises(ZeroDivisionError):
         divide(1, 0)
 
-    with open(filename, "r") as f:
-        log_content = f.read()
-
-    assert "divide" in log_content
-    assert "ZeroDivisionError" in log_content
-    assert "Args: (1, 0)" in log_content
-    assert "Kwargs: {}" in log_content
+    log_content = log_stream.getvalue()
+    assert "INFO:Вызов функции divide" in log_content
+    assert "ERROR:Ошибка в функции divide: division by zero" in log_content
 
 
-def test_log_to_console(capsys):
-    """Тестирует вывод логов в консоль.
-
-    Args:
-        capsys: Фикстура pytest для перехвата вывода.
-
-    Проверяет:
-        - Вывод информации о вызове функции
-        - Вывод информации об ошибках
-    """
+def test_log_with_default_logger():
+    log_stream = StringIO()
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    logger.addHandler(logging.StreamHandler(log_stream))
 
     @log()
     def multiply(a, b):
-        """Тестовая функция для умножения двух чисел."""
         return a * b
 
-    multiply(3, 4)
-    captured = capsys.readouterr()
-    console_output = captured.out
+    result = multiply(3, 4)
+    assert result == 12
 
-    assert "multiply" in console_output
-    assert "ok" in console_output
+    log_content = log_stream.getvalue()
+    assert "Вызов функции multiply" in log_content
+    assert "Функция multiply выполнена успешно" in log_content
 
-    @log()
-    def fail_func():
-        """Тестовая функция, вызывающая исключение."""
-        raise ValueError("Oops!")
-
-    with pytest.raises(ValueError):
-        fail_func()
-
-    captured = capsys.readouterr()
-    console_output = captured.out
-
-    assert "fail_func" in console_output
-    assert "ValueError" in console_output
+    # Очищаем обработчики
+    logger.handlers.clear()
 
 
-def test_decorator_preserves_functionality():
-    """Тестирует, что декоратор не нарушает работу функции.
-
-    Проверяет:
-        - Функция возвращает корректный результат
-        - Декоратор не модифицирует поведение функции
-    """
+def test_log_preserves_metadata():
+    """Тест сохранения метаданных функции"""
 
     @log()
-    def subtract(a, b):
-        """Тестовая функция для вычитания двух чисел."""
-        return a - b
+    def original_func():
+        """Тестовая функция"""
+        pass
 
-    assert subtract(5, 3) == 2
+    assert original_func.__name__ == "original_func"
+    assert original_func.__doc__ == "Тестовая функция"
 
 
-def test_log_with_args_and_kwargs(tmp_path):
-    """Тестирует логирование функций с разными типами аргументов.
+def test_log_with_args_and_kwargs(setup_logger):
+    """Тест логирования функций с аргументами"""
+    logger, log_stream = setup_logger
 
-    Args:
-        tmp_path: Фикстура pytest для создания временных файлов.
-
-    Проверяет:
-        - Логирование позиционных аргументов
-        - Логирование именованных аргументов
-        - Корректность формата логов
-    """
-    filename = tmp_path / "args_log.txt"
-
-    @log(filename=str(filename))
+    @log(logger=logger)
     def greet(name, greeting="Hello"):
-        """Тестовая функция с аргументами по умолчанию."""
-        return f"{greeting}, {name}!"
+        return f"{greeting}, {name}"
 
     greet("Alice", greeting="Hi")
 
-    with open(filename, "r") as f:
-        log_content = f.read()
-
-    assert "greet" in log_content
-    assert "Args: ('Alice',)" in log_content
-    assert "Kwargs: {'greeting': 'Hi'}" in log_content
-    assert "greet ok" in log_content
+    log_content = log_stream.getvalue()
+    assert "INFO:Вызов функции greet" in log_content
+    assert "INFO:Функция greet выполнена успешно" in log_content

@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock, patch
 
-import requests  # Добавляем импорт requests
+import requests
 
 from src.external_api import convert_transaction_amount  # Импорт тестируемой функции
 
